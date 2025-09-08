@@ -1,0 +1,291 @@
+:root {
+  --bg: #0f1115;
+  --panel: #151924;
+  --muted: #9aa3b2;
+  --text: #e6e9ef;
+  --accent: #6ea8fe;
+  --border: #273044;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Vazirmatn", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+}
+
+.title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0 0 8px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 16px 0 8px 0;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.pane {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.badge {
+  color: var(--muted);
+  font-size: 12px;
+  margin-inline-start: auto;
+  margin-inline-end: 8px;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  outline: none;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+}
+
+.editor {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  position: relative;
+}
+
+.gutter {
+  user-select: none;
+  padding: 12px 8px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border-inline-end: 1px solid var(--border);
+  text-align: end;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.editor textarea {
+  padding-inline-start: 8px;
+}
+
+.gutter .lines {
+  will-change: transform;
+}
+
+.gutter .line {
+  display: block;
+  line-height: 1.6;
+}
+
+.gutter .line.changed {
+  color: #ffd479;
+}
+
+.btn {
+  font-family: "Vazirmatn", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.preview-pane {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.preview-surface {
+  padding: 12px;
+}
+
+.demo {
+  border: 1px dashed var(--border);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+/* Contain floated elements inside the demo box so buttons don't overflow */
+.demo::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.demo button{
+  font-family: "Vazirmatn", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 24px 0 16px 0;
+}
+
+@media (max-width: 900px) {
+
+  .panes,
+  .preview {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+}
+
+.modal[aria-hidden="false"] {
+  display: block;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  max-width: 680px;
+  margin: 10vh auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-body {
+  padding: 12px;
+  color: var(--text);
+}
+
+.footer {
+  text-align: center;
+  margin: 24px 0 16px 0;
+}
+
+.footer-links {
+  color: #9aa3b2;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  direction: ltr;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-links svg {
+  opacity: 0.9;
+}
+
+.footer-links .dot {
+  color: #55607a;
+  margin: 0 6px;
+}

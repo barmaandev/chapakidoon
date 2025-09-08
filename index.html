@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>چپکی دون، تبدیل‌کننده LTR → RTL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./app.js"></script>
+
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="title">چپکی دون، مبدل CSS چپ‌به‌راست به راست‌به‌چپ</h1>
+      <p class="subtitle">آنلاین · لحظه‌ای · مقایسه سریع · فارسی · مینیمال</p>
+      <div class="actions">
+        <button id="helpBtn" class="btn" aria-haspopup="dialog" aria-controls="helpModal">راهنما</button>
+        <input type="file" id="fileInput" accept=".css" hidden>
+        <button id="uploadBtn" class="btn">آپلود CSS</button>
+        <button id="downloadBtn" class="btn">دانلود RTL</button>
+        <button id="shareBtn" class="btn">اشتراک</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <div class="field">
+        <label for="swapLogical" class="checkbox">
+          <input type="checkbox" id="swapLogical" checked>
+          <span>تغییر جهت خواص منطقی (margin-left ⇄ margin-right و ...)</span>
+        </label>
+      </div>
+      <div class="field">
+        <label for="preserveUrls" class="checkbox">
+          <input type="checkbox" id="preserveUrls" checked>
+          <span>حفظ URLها بدون تغییر</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="panes">
+      <div class="pane">
+        <div class="pane-header">
+          <h2>CSS (LTR)</h2>
+          <span class="badge" id="badgeLtr">تغییرات: 0</span>
+        </div>
+        <div class="editor">
+          <textarea id="inputCss" spellcheck="false" dir="ltr"
+            placeholder="/* CSS چپ‌به‌راست خود را اینجا وارد کنید */"></textarea>
+            <div class="gutter" id="gutterLtr" aria-hidden="true"></div>
+
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-header">
+          <h2>CSS (RTL)</h2>
+          <span class="badge" id="badgeRtl">تغییرات: 0</span>
+          <button id="copyRtl" class="btn">کپی</button>
+        </div>
+        <div class="editor">
+          <textarea id="outputCss" spellcheck="false" dir="ltr" readonly></textarea>
+          <div class="gutter" id="gutterRtl" aria-hidden="true"></div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="preview">
+      <div class="preview-pane">
+        <div class="pane-header">
+          <h3>پیش‌نمایش LTR</h3>
+        </div>
+        <div class="preview-surface" id="previewLtr" dir="ltr">
+          <style id="styleLtr"></style>
+          <div class="demo">
+            <h4>عنوان نمونه</h4>
+            <p>این یک متن نمونه برای نمایش سبک‌ها در حالت LTR است.</p>
+            <button>دکمه</button>
+          </div>
+        </div>
+      </div>
+      <div class="preview-pane">
+        <div class="pane-header">
+          <h3>پیش‌نمایش RTL</h3>
+        </div>
+        <div class="preview-surface" id="previewRtl" dir="rtl">
+          <style id="styleRtl"></style>
+          <div class="demo">
+            <h4>عنوان نمونه</h4>
+            <p>این یک متن نمونه برای نمایش سبک‌ها در حالت RTL است.</p>
+            <button>دکمه</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <footer class="footer">
+      <p class="footer-links">
+        توسعه توسط
+        <a href="https://barmaan.dev/" target="_blank" rel="noopener noreferrer"> بارمان شکوهی</a>
+        <span class="dot">·</span>
+        <a href="https://github.com/barmaandev" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.83 1.23 1.83 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.56.12-3.25 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.69.24 2.94.12 3.25.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.62-5.47 5.92.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"/></svg>
+          GitHub
+        </a>
+        <span class="dot">·</span>
+        <a href="mailto:info@barmaan.dev" style="display:inline-flex;align-items:center;gap:6px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+          info@barmaan.dev
+        </a>
+        <span class="dot">·</span>
+        <a href="tel:+989120000000" style="display:inline-flex;align-items:center;gap:6px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V21c0 .55-.45 1-1 1C10.85 22 2 13.15 2 2c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg>
+          +98 930 42 97 42 1
+        </a>
+      </p>
+    </footer>
+  </main>
+</body>
+
+<!-- Help Modal -->
+<div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-backdrop" data-close="helpModal"></div>
+  <div class="modal-content" role="document">
+    <div class="modal-header">
+      <h3>راهنمای سریع</h3>
+      <button class="btn" data-close="helpModal" aria-label="بستن">✕</button>
+    </div>
+    <div class="modal-body">
+      <ul>
+        <li>تبدیل خودکار خواص جهت‌دار (left/right، margin/padding، float، و ...)</li>
+        <li>میانبرها: Ctrl/Cmd+Enter = کپی RTL، Ctrl/Cmd+S = دانلود</li>
+        <li>ذخیره خودکار ورودی و تنظیمات در مرورگر</li>
+        <li>پنل تفاوت‌ها، گزینه «فقط تغییرات»</li>
+      </ul>
+      <p>توسعه توسط <a href="https://barmaan.dev/" target="_blank" rel="noopener noreferrer">بارمان شکوهی</a></p>
+    </div>
+  </div>
+</div>
+
+</html>
