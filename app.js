@@ -261,6 +261,7 @@
     updateChangeBadges(ltrCss, rtlCss);
     persistState();
     renderGutters(ltrCss, rtlCss);
+    autoResizeEditors();
   }
 
   function initSample() {
@@ -356,7 +357,7 @@
         const blob = new Blob([output.value], { type: 'text/css;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'style-rtl-chapakisho.css';
+        a.download = 'style-rtl-chapakidoon.css';
         a.click();
         URL.revokeObjectURL(a.href);
       });
@@ -426,24 +427,24 @@
     bindUi();
   });
 
-  function renderGutters(ltrCss, rtlCss) {
-    if (!gutterLtr || !gutterRtl) return;
-    const lCount = (input.value.match(/\n/g) || []).length + 1;
-    const rCount = (output.value.match(/\n/g) || []).length + 1;
-    const changed = computeChangedLineSet(ltrCss ?? input.value, rtlCss ?? output.value);
-    gutterLtr.innerHTML = `<div class="lines">${buildLines(lCount, changed)}</div>`;
-    gutterRtl.innerHTML = `<div class="lines">${buildLines(rCount, changed)}</div>`;
-    syncGutters();
+  function autoResizeEditors() {
+    [input, output].forEach((ta) => {
+      if (!ta) return;
+      ta.style.height = 'auto';
+      // extra padding to avoid clipping bottom lines
+      const extra = 8;
+      ta.style.height = (ta.scrollHeight + extra) + 'px';
+    });
   }
 
-  function buildLines(n, changedSet) {
-    let html = '';
-    for (let i = 1; i <= n; i++) {
-      const ch = changedSet && changedSet.has(i) ? ' class="line changed"' : ' class="line"';
-      html += `<span${ch}>${i}</span>`;
-    }
-    return html;
+  function renderGutters(ltrCss, rtlCss) {
+    if (!gutterLtr || !gutterRtl) return;
+    const changed = computeChangedLineSet(ltrCss ?? input.value, rtlCss ?? output.value);
+    drawGutter(gutterLtr, input, (input.value.match(/\n/g) || []).length + 1, changed);
+    drawGutter(gutterRtl, output, (output.value.match(/\n/g) || []).length + 1, changed);
   }
+
+  function buildLines() { /* deprecated (canvas gutter) */ }
 
   function computeChangedLineSet(a, b) {
     const al = a.split(/\n/);
@@ -456,11 +457,76 @@
     return set;
   }
 
+  let redrawScheduled = false;
   function syncGutters() {
-    const l = gutterLtr && gutterLtr.querySelector('.lines');
-    const r = gutterRtl && gutterRtl.querySelector('.lines');
-    if (l) l.style.transform = `translateY(${-input.scrollTop}px)`;
-    if (r) r.style.transform = `translateY(${-output.scrollTop}px)`;
+    if (redrawScheduled) return;
+    redrawScheduled = true;
+    requestAnimationFrame(() => {
+      renderGutters();
+      redrawScheduled = false;
+    });
+  }
+
+  function ensureCanvas(container) {
+    let canvas = container.querySelector('canvas');
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.style.display = 'block';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      container.innerHTML = '';
+      container.appendChild(canvas);
+    }
+    // Match gutter background to avoid flicker
+    const gutterBg = getComputedStyle(container).backgroundColor;
+    canvas.style.backgroundColor = gutterBg;
+    return canvas;
+  }
+
+  function drawGutter(container, textarea, lineCount, changedSet) {
+    const canvas = ensureCanvas(container);
+    const dpr = window.devicePixelRatio || 1;
+    // Keep gutter container the same height as textarea content
+    const contentHeight = Math.max(1, textarea.scrollHeight);
+    container.style.height = contentHeight + 'px';
+    const rect = container.getBoundingClientRect();
+    const width = Math.max(30, Math.round(rect.width));
+    const height = Math.max(1, Math.round(contentHeight));
+    // resize canvas backing store
+    if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+    }
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // styles
+    const cs = getComputedStyle(textarea);
+    const padTop = parseFloat(cs.paddingTop) || 0;
+    const lineHeight = parseFloat(cs.lineHeight) || (parseFloat(cs.fontSize) * 1.4);
+    const bg = getComputedStyle(container).backgroundColor || 'rgba(255,255,255,0.03)';
+    const textColor = '#9aa3b2';
+    const changedColor = '#ffd479';
+    // clear only (canvas has CSS background color set)
+    ctx.clearRect(0, 0, width, height);
+    // numbers
+    ctx.font = `${cs.fontSize} ${cs.fontFamily}`;
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'right';
+    const scroll = textarea.scrollTop;
+    // find first visible line index
+    const firstLineOffset = (scroll % lineHeight);
+    let y = padTop - firstLineOffset;
+    let lineIndex = Math.floor(scroll / lineHeight) + 1;
+    const rightPad = 6;
+    while (y < height && lineIndex <= lineCount + 1) {
+      ctx.fillStyle = changedSet && changedSet.has(lineIndex) ? changedColor : textColor;
+      const text = String(lineIndex);
+      ctx.fillText(text, width - rightPad, y);
+      y += lineHeight;
+      lineIndex++;
+    }
   }
 
   // Very small CSS scoper: prefixes top-level selectors and those inside @media/@supports.

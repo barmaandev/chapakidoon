@@ -115,18 +115,25 @@ textarea {
   outline: none;
   padding: 12px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre; /* no wrap */
+  overflow-wrap: normal; /* prevent soft wrap */
+  word-break: normal; /* prevent breaking long tokens */
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .editor {
   display: grid;
   grid-template-columns: 1fr auto;
   position: relative;
+  min-width: 0;
 }
 
 .gutter {
   user-select: none;
-  padding: 12px 8px;
+  padding: 8px 6px;
   color: var(--muted);
   background: rgba(255, 255, 255, 0.03);
   border-inline-end: 1px solid var(--border);
@@ -134,10 +141,12 @@ textarea {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
   overflow: hidden;
+  width: 36px;
 }
 
 .editor textarea {
   padding-inline-start: 8px;
+  height: auto; /* auto-height via JS */
 }
 
 .gutter .lines {
@@ -147,6 +156,7 @@ textarea {
 .gutter .line {
   display: block;
   line-height: 1.6;
+  height: 1.6em;
 }
 
 .gutter .line.changed {
