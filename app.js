@@ -432,10 +432,11 @@
   function autoResizeEditors() {
     [input, output].forEach((ta) => {
       if (!ta) return;
-      ta.style.height = 'auto';
-      // extra padding to avoid clipping bottom lines
-      const extra = 8;
-      ta.style.height = (ta.scrollHeight + extra) + 'px';
+      // Force shrink then grow based on new content
+      const extra = 8; // avoid clipping last line
+      ta.style.height = '0px';
+      const target = ta.scrollHeight + extra;
+      ta.style.height = target + 'px';
     });
   }
 
