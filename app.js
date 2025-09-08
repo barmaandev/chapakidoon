@@ -366,8 +366,10 @@
       shareBtn.addEventListener('click', async () => {
         persistState();
         try {
-          await navigator.clipboard.writeText(location.href);
-          shareBtn.textContent = 'کپی شد';
+          const longUrl = location.href;
+          const shortUrl = await shortenUrl(longUrl);
+          await navigator.clipboard.writeText(shortUrl || longUrl);
+          shareBtn.textContent = shortUrl ? 'لینک کوتاه کپی شد' : 'کپی شد';
           setTimeout(() => (shareBtn.textContent = 'اشتراک'), 1200);
         } catch (_) {}
       });
@@ -435,6 +437,26 @@
       const extra = 8;
       ta.style.height = (ta.scrollHeight + extra) + 'px';
     });
+  }
+
+  async function shortenUrl(url) {
+    try {
+      // Try is.gd first
+      const res = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`, { mode: 'cors' });
+      if (res.ok) {
+        const txt = (await res.text()).trim();
+        if (/^https?:\/\//i.test(txt)) return txt;
+      }
+    } catch (_) {}
+    try {
+      // Fallback to tinyurl
+      const res2 = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`, { mode: 'cors' });
+      if (res2.ok) {
+        const txt2 = (await res2.text()).trim();
+        if (/^https?:\/\//i.test(txt2)) return txt2;
+      }
+    } catch (_) {}
+    return null;
   }
 
   function renderGutters(ltrCss, rtlCss) {
