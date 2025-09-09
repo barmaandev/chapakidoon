@@ -283,7 +283,9 @@ textarea {
   align-items: center;
   justify-content: center;
 }
-
+.footer-actions p{
+  margin: 0;
+}
 .footer-actions a {
   text-decoration: none;
 }
